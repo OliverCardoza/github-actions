@@ -1,0 +1,30 @@
+# Syntax: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+
+# Basic build and test CI for Go programs.
+name: 'Go CI'
+
+on:
+  workflow_call:
+    inputs:
+      go-version:
+        description: 'The version of the go command to use.'
+        default: '1.17'
+        required: false
+        type: string
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Go setup
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{ inputs.go-version }}
+    - name: Build
+      run: go build ./...
+    - name: Test
+      run: go test ./...
+    - name: Vet
+      run: go vet ./...
